@@ -10,11 +10,11 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 # Collect data from a url
-def collectFromUrl(url):
+def collectFromUrl(session, url):
 	baseUrl = "http://seekingalpha.com"
 	userHeaders = {"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"}
 	print(url)
-	r = requests.get(url,headers=userHeaders)
+	r = session.get(url,headers=userHeaders)
 	
 	soup = BeautifulSoup(r.content,'html.parser')
 	
@@ -58,12 +58,12 @@ def collectFromUrl(url):
 	    except Exception as e:
 	        print(e)
 # Collect data from a ticker and page number
-def collectFromTicker(ticker, page):
+def collectFromTicker(session, ticker, page):
 	baseUrl = "http://seekingalpha.com"
 	url = 'http://seekingalpha.com/symbol/'+ticker+'/focus/'+page
 	print(url)
 	userHeaders = {"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"}
-	r = requests.get(url,headers = userHeaders)
+	r = session.get(url,headers = userHeaders)
 	#print(r.content)
 	
 	soup = BeautifulSoup(r.content,'html.parser')
