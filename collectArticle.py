@@ -14,8 +14,8 @@ import sys
 import codecs
 
 # Set std out encoding
-#sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
-#print (sys.stdout)
+sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
+print (sys.stdout)
 
 sessionCode = loginSA()[0]
 print(sessionCode)
@@ -29,12 +29,12 @@ r = session.get(url, headers = userHeader)
 soup = BeautifulSoup(r.content, 'html.parser')
 
 #print(soup)
-"""
+
 # Print to txt file
 file = open('out.txt','wb')
 file.write(soup.prettify().encode('utf-8'))
 file.close
-"""
+
 title = soup.find_all("h1", {"class":"has-title-test"})[0].text
 print("title: ", title)
 time = soup.find_all("time", {"itemprop":"datePublished"})[0]
@@ -45,6 +45,9 @@ print("Time is: {0} and {1}".format(time1, time2))
 # instead, we have a field with id="a-comments-wrapper"
 #numComments = soup.find_all("span", {id:"a-comments"})
 #print("Num of comments: ",numComments)
+
+#instead, I find another place for num of comments
+
 tickersAbout = []
 companiesAbout = soup.find_all("a", {"sasource":"article_primary_about"})
 for companyAbout in companiesAbout:
@@ -56,6 +59,52 @@ companiesIncludes = soup.find_all("a", {"sasource":"article_about"})
 for companyIncludes in companiesIncludes:
     tickersIncludes.append(companyIncludes.text)
 print("Tickers Includes are: {0}".format(tickersIncludes))
+
+author = soup.find_all("a",{"class":"name-link", "sasource":"auth_header_name"})
+authorUrl = author[0].get("href")
+authorName = author[0].contents[0].text
+print("Name is: {0}, {1}".format(authorUrl, authorName))
+
+bio = soup.find_all("div", {"class":"bio hidden-print"})[0].text
+print("Bio is: {0} ".format(bio))
+
+summary = []
+summaryByParagraphes = soup.find_all("div", {"class":"a-sum", "itemprop":"description"})[0].find_all("p")
+for p in summaryByParagraphes:
+    summary.append(p.text);
+print(' '.join(summary))
+
+image = soup.find_all("span", {"class":"image-overlay"})
+if len(image) > 0:
+    imageDummy = 1
+else:
+    imageDummy = 0
+print("ImageDummy: ",imageDummy)
+
+body = soup.find_all("div", {"id":"a-body"})[0].find_all("p")
+bodyContent = ''
+for p in body:
+    bodyContent += (p.text+' ')
+bodyContent = bodyContent.split("Disclosure")[0]
+"""
+# If you use 'wb', then you have to associate it with 'encode'
+file = open('out.txt','wb')
+file.write(bodyContent.encode('utf-8'))
+file.close
+"""
+"""
+# Print to txt file
+file = open('out.txt','wb')
+for p in body:
+    file.write((p.text+' ').encode('utf-8'))
+file.close
+"""
+
+disclosure = soup.find_all("p", {"id":"a-disclosure"})[0].find_all("span")[0].text
+print("Disclosure: ", disclosure)
+
+
+
 
 
 
