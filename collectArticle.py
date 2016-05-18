@@ -40,8 +40,33 @@ print("title: ", title)
 time = soup.find_all("time", {"itemprop":"datePublished"})[0]
 time1 = time.get("content")
 time2 = time.text
-print("Time is {0} and {1}".format(time1, time2))
+print("Time is: {0} and {1}".format(time1, time2))
 # This part, we could not collect the num of comments. we don't have this field when we download the webpage.
 # instead, we have a field with id="a-comments-wrapper"
 #numComments = soup.find_all("span", {id:"a-comments"})
 #print("Num of comments: ",numComments)
+tickersAbout = []
+companiesAbout = soup.find_all("a", {"sasource":"article_primary_about"})
+for companyAbout in companiesAbout:
+    tickersAbout.append(companyAbout.text)
+print("Tickers About are: {0}".format(tickersAbout))
+
+tickersIncludes = []
+companiesIncludes = soup.find_all("a", {"sasource":"article_about"})
+for companyIncludes in companiesIncludes:
+    tickersIncludes.append(companyIncludes.text)
+print("Tickers Includes are: {0}".format(tickersIncludes))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
