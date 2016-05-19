@@ -12,40 +12,42 @@ from urllib.parse import urljoin
 from login import loginSA
 import sys
 import codecs
+from time import sleep
+from multiprocessing.pool import ThreadPool
 
 def collectArticle(session, url): 
 	# Set std out encoding
 	#sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
 	#print (sys.stdout)
-
 	#sessionCode = loginSA()[0]
 	#print(sessionCode)
 	#session = loginSA()[1]
+
 	userHeader = {"Referer": "http://seekingalpha.com/",
 			"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"}
-	
+	 
 	r = session.get(url, headers = userHeader)
-	#print(r.encoding)
+	
 
 	soup = BeautifulSoup(r.content, 'html.parser')
-
-	#print(soup)
-
-	# Print to txt file
+	
+	sleep(2)
 	"""
-	file = open('out.txt','wb')
-	file.write(soup.prettify().encode('utf-8'))
-	file.close
+	poolSession = ThreadPool(processes=1)
+	async_result_session_get = poolSession.apply_async(session.get, (url, userHeader))
+	r = async_result_session_get.get()
+	soup = BeautifulSoup(r.content, 'html.parser')
 	"""
+	
 	pro = soup.find_all("div",{"class":"checkout-header-text"})
 	if len(pro)!=0:
 		print("Ignore a pro article.")
-		return "pro"
+		return "pro: "+url
 	try:
 		title = soup.find_all("h1", {"itemprop":"headline"})[0].text
 	except:
 		print("Could not get title: ",url)
-		return "wrongUrl"
+		return "Could not get title: "+url
 	###print("title: ", title)
 	dateTime = soup.find_all("time", {"itemprop":"datePublished"})[0]
 	time1 = dateTime.get("content")
@@ -107,19 +109,7 @@ def collectArticle(session, url):
 	for p in body:
 	    bodyContent += (p.text+' ')
 	bodyContent = bodyContent.split("Disclosure")[0]
-	"""
-	# If you use 'wb', then you have to associate it with 'encode'
-	file = open('out.txt','wb')
-	file.write(bodyContent.encode('utf-8'))
-	file.close
-	"""
-	"""
-	# Print to txt file
-	file = open('out.txt','wb')
-	for p in body:
-	    file.write((p.text+' ').encode('utf-8'))
-	file.close
-	"""
+	
 
 	try:
 		disclosure = soup.find_all("p", {"id":"a-disclosure"})[0].find_all("span")[0].text
@@ -148,7 +138,7 @@ if __name__ == "__main__":
     url3 = 'https://seekingalpha.com//article/3973979-ptcs-misunderstood-transformation-creates-rare-investment-opportunity'
     #url4 is an empty page
     url4 = 'http://seekingalpha.com/symbol/BIIB/focus/10'
-    test = 'http://seekingalpha.com/article/2263743-3m-post-it-as-a-great-business-or-is-it-scotch-taped-together'
+    test = 'http://seekingalpha.com/article/3970370-apple-give-us-real-numbers'
     collectArticle(session, test)
 
 

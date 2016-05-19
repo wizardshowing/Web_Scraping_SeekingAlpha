@@ -29,8 +29,8 @@ def insertDB(session, url):
 
 	#collect one article
 	article = collectArticle(session, url)
-	if article == 'pro' or article =='wrongUrl':
-		return 'pro';
+	if type(article) is not dict:
+		return article;
 	#print(article['title'])
 	now = datetime.datetime.now()
 

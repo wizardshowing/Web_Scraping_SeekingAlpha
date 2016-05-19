@@ -1,5 +1,6 @@
 .DS_Store
 out.txt
-keys.yaml
+*.yaml
 *.txt
+test.py
 __pycache__

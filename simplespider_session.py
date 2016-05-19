@@ -119,7 +119,7 @@ if __name__=="__main__":
 		print("###", a["linkAdr"])
 	"""
 	session = loginSA()[1]
-	res = collectFromTicker(session, 'ADBE','9')
+	res = collectFromTicker(session, 'MMM','1')
 	print("###########################")
 	for a in res:
 		print("###", a["linkTxt"].replace(u"\u2018", "'").replace(u"\u2019", "'"))
