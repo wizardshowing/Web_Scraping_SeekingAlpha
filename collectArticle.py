@@ -3,7 +3,7 @@ Author:TH
 Date:17/05/2016
 Download one artile using url.
 Naming rules: http://stackoverflow.com/questions/2029358/should-i-write-table-and-column-names-always-lower-case
-Table design: Title, DateTime, NumComments, About, Incluses, Name, NumFollowers, Bio, Summary, Content, Disclosure, EmailedTo, Tagged, NumComments
+Table design: Title, Date, Time, TickersAbout, TickersIncludes, Name, NameLink, Bio, Summary, ImageDummy, BodyContent, Disclosure, Position 
 """
 
 import requests
@@ -13,97 +13,119 @@ from login import loginSA
 import sys
 import codecs
 
-# Set std out encoding
-sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
-print (sys.stdout)
+def collectArticle(url): 
+	# Set std out encoding
+	sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
+	print (sys.stdout)
 
-sessionCode = loginSA()[0]
-print(sessionCode)
-session = loginSA()[1]
-userHeader = {"Referer": "http://seekingalpha.com/",
-		"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"}
-url = 'http://seekingalpha.com/article/3975401-apple-buffett-wants-stock-drop'
-r = session.get(url, headers = userHeader)
-#print(r.encoding)
+	sessionCode = loginSA()[0]
+	print(sessionCode)
+	session = loginSA()[1]
+	userHeader = {"Referer": "http://seekingalpha.com/",
+			"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"}
+	
+	r = session.get(url, headers = userHeader)
+	#print(r.encoding)
 
-soup = BeautifulSoup(r.content, 'html.parser')
+	soup = BeautifulSoup(r.content, 'html.parser')
 
-#print(soup)
+	#print(soup)
 
-# Print to txt file
-file = open('out.txt','wb')
-file.write(soup.prettify().encode('utf-8'))
-file.close
+	# Print to txt file
+	"""
+	file = open('out.txt','wb')
+	file.write(soup.prettify().encode('utf-8'))
+	file.close
+	"""
 
-title = soup.find_all("h1", {"class":"has-title-test"})[0].text
-print("title: ", title)
-time = soup.find_all("time", {"itemprop":"datePublished"})[0]
-time1 = time.get("content")
-time2 = time.text
-print("Time is: {0} and {1}".format(time1, time2))
-# This part, we could not collect the num of comments. we don't have this field when we download the webpage.
-# instead, we have a field with id="a-comments-wrapper"
-#numComments = soup.find_all("span", {id:"a-comments"})
-#print("Num of comments: ",numComments)
+	title = soup.find_all("h1", {"itemprop":"headline"})[0].text
+	print("title: ", title)
+	dateTime = soup.find_all("time", {"itemprop":"datePublished"})[0]
+	time1 = dateTime.get("content")
+	time2 = dateTime.text
+	date = dateTime.get("content").split('T')[0]
+	time = dateTime.get("content").split('T')[1].split('Z')[0]
+	print("Date time is: {0} and {1}".format(date, time))
+	# This part, we could not collect the num of comments. we don't have this field when we download the webpage.
+	# instead, we have a field with id="a-comments-wrapper"
+	#numComments = soup.find_all("span", {id:"a-comments"})
+	#print("Num of comments: ",numComments)
 
-#instead, I find another place for num of comments
+	#instead, I find another place for num of comments
 
-tickersAbout = []
-companiesAbout = soup.find_all("a", {"sasource":"article_primary_about"})
-for companyAbout in companiesAbout:
-    tickersAbout.append(companyAbout.text)
-print("Tickers About are: {0}".format(tickersAbout))
+	tickersAbout = []
+	companiesAbout = soup.find_all("a", {"sasource":"article_primary_about"})
+	for companyAbout in companiesAbout:
+		if "(" in companyAbout.text:
+			tickersAbout.append(companyAbout.text.split("(")[1].split(")")[0])
+		else:
+			tickersAbout.append(companyAbout.text)
+	print("Tickers About are: {0}".format(', '.join(tickersAbout)))
+	tickersAboutStr = ', '.join(tickersAbout)
 
-tickersIncludes = []
-companiesIncludes = soup.find_all("a", {"sasource":"article_about"})
-for companyIncludes in companiesIncludes:
-    tickersIncludes.append(companyIncludes.text)
-print("Tickers Includes are: {0}".format(tickersIncludes))
+	tickersIncludes = []
+	companiesIncludes = soup.find_all("a", {"sasource":"article_about"})
+	for companyIncludes in companiesIncludes:
+	    tickersIncludes.append(companyIncludes.text)
+	print("Tickers Includes are: {0}".format(', '.join(tickersIncludes)))
+	tickersIncludesStr = ', '.join(tickersIncludes)
 
-author = soup.find_all("a",{"class":"name-link", "sasource":"auth_header_name"})
-authorUrl = author[0].get("href")
-authorName = author[0].contents[0].text
-print("Name is: {0}, {1}".format(authorUrl, authorName))
+	author = soup.find_all("a",{"class":"name-link", "sasource":"auth_header_name"})
+	authorUrl = author[0].get("href")
+	authorName = author[0].contents[0].text
+	print("Name is: {0}, {1}".format(authorUrl, authorName))
 
-bio = soup.find_all("div", {"class":"bio hidden-print"})[0].text
-print("Bio is: {0} ".format(bio))
+	bio = soup.find_all("div", {"class":"bio hidden-print"})[0].text
+	print("Bio is: {0} ".format(bio))
 
-summary = []
-summaryByParagraphes = soup.find_all("div", {"class":"a-sum", "itemprop":"description"})[0].find_all("p")
-for p in summaryByParagraphes:
-    summary.append(p.text);
-print(' '.join(summary))
+	summary = []
+	try:
+		summaryByParagraphes = soup.find_all("div", {"class":"a-sum", "itemprop":"description"})[0].find_all("p")
+		for p in summaryByParagraphes:
+		    summary.append(p.text);
+		print("Summary: ",' '.join(summary))
+	except Exception as e:
+		print(e, ', No Summary')
+	summaryStr = ' '.join(summary)
 
-image = soup.find_all("span", {"class":"image-overlay"})
-if len(image) > 0:
-    imageDummy = 1
-else:
-    imageDummy = 0
-print("ImageDummy: ",imageDummy)
+	image = soup.find_all("span", {"class":"image-overlay"})
+	if len(image) > 0:
+	    imageDummy = 1
+	else:
+	    imageDummy = 0
+	print("ImageDummy: ",imageDummy)
 
-body = soup.find_all("div", {"id":"a-body"})[0].find_all("p")
-bodyContent = ''
-for p in body:
-    bodyContent += (p.text+' ')
-bodyContent = bodyContent.split("Disclosure")[0]
-"""
-# If you use 'wb', then you have to associate it with 'encode'
-file = open('out.txt','wb')
-file.write(bodyContent.encode('utf-8'))
-file.close
-"""
-"""
-# Print to txt file
-file = open('out.txt','wb')
-for p in body:
-    file.write((p.text+' ').encode('utf-8'))
-file.close
-"""
+	body = soup.find_all("div", {"id":"a-body"})[0].find_all("p")
+	bodyContent = ''
+	for p in body:
+	    bodyContent += (p.text+' ')
+	bodyContent = bodyContent.split("Disclosure")[0]
+	
+	# If you use 'wb', then you have to associate it with 'encode'
+	file = open('out.txt','wb')
+	file.write(bodyContent.encode('utf-8'))
+	file.close
+	
+	"""
+	# Print to txt file
+	file = open('out.txt','wb')
+	for p in body:
+	    file.write((p.text+' ').encode('utf-8'))
+	file.close
+	"""
 
-disclosure = soup.find_all("p", {"id":"a-disclosure"})[0].find_all("span")[0].text
-print("Disclosure: ", disclosure)
+	try:
+		disclosure = soup.find_all("p", {"id":"a-disclosure"})[0].find_all("span")[0].text
+		print("Disclosure: ", disclosure)
+	except Exception as e:
+		print(e, ', No Disclosure')
+		disclosure = ''
 
-
+if __name__ == "__main__":
+    url1 = 'http://seekingalpha.com/article/3975401-apple-buffett-wants-stock-drop'
+    url2 = 'http://seekingalpha.com/article/3972353-debt-integration-buyers-remorse-can-abbott-pull-deals'
+    url3 = 'http://seekingalpha.com/article/3976011-googles-waze-rider-app-smarter-apples-1-billion-investment-didi'
+    collectArticle(url3)
 
 
 
