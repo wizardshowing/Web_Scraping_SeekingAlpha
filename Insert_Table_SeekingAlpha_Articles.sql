@@ -10,4 +10,7 @@ END
 
 SELECT *
 FROM dbo.SeekingAlpha_Articles
+WHERE Title = 'Why Would Apple Buy Displays From Samsung?'
+ORDER BY ArticleID
+
 

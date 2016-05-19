@@ -9,6 +9,7 @@ python -m pip install mechanize
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
+from login import loginSA
 # Collect data from a url
 def collectFromUrl(session, url):
 	baseUrl = "http://seekingalpha.com"
@@ -106,7 +107,8 @@ def collectFromTicker(session, ticker, page):
 	        #print("urljoin", urljoin(baseUrl, linkAdr))
 	        yield {"linkTxt": linkTxt, "linkAdr": urljoin(baseUrl, linkAdr)}
 	    except Exception as e:
-	        print(e)
+	        pass
+	        #print(e)
 # Test functions
 if __name__=="__main__":
 	"""
@@ -116,7 +118,8 @@ if __name__=="__main__":
 		print("###", a["linkTxt"])
 		print("###", a["linkAdr"])
 	"""
-	res = collectFromUrl('http://seekingalpha.com/symbol/AAPL/focus/1')
+	session = loginSA()[1]
+	res = collectFromTicker(session, 'AAPL','1')
 	print("###########################")
 	for a in res:
 		print("###", a["linkTxt"])

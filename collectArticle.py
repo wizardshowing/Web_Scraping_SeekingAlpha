@@ -146,7 +146,9 @@ if __name__ == "__main__":
     url2 = 'http://seekingalpha.com/article/3972353-debt-integration-buyers-remorse-can-abbott-pull-deals'
     #url3 links to an articles which needs pro subscription
     url3 = 'https://seekingalpha.com//article/3973979-ptcs-misunderstood-transformation-creates-rare-investment-opportunity'
-    collectArticle(session, url3)
+    #url4 is an empty page
+    url4 = 'http://seekingalpha.com/symbol/BIIB/focus/10'
+    collectArticle(session, url4)
 
 
 
