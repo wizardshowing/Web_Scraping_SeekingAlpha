@@ -11,6 +11,18 @@ from collectArticle import collectArticle
 from insertDB import insertDB
 import tickers
 
+def collectFromOnePage(ticker, page):
+	
+	session = loginSA()[1]
+	res = collectFromTicker(session,ticker,str(page))
+	print(ticker, ' ',str(page))
+	for a in res:
+		#print(a["linkTxt"].replace(u"\u2018", "'").replace(u"\u2019", "'"))
+		try:
+			insertDB(session, a["linkAdr"])
+		except Exception as e:
+			print("isertDB error, ",e)
+#collectFromOnePage('ADBE',9)
 tickers = tickers.tickers
 session = loginSA()[1]
 for ticker in tickers:
@@ -18,8 +30,9 @@ for ticker in tickers:
 		res = collectFromTicker(session,ticker,str(page))
 		print(ticker, ' ',str(page))
 		for a in res:
-			print(a["linkTxt"])
+			#print(a["linkTxt"])
 			try:
 				insertDB(session, a["linkAdr"])
 			except Exception as e:
 				print("isertDB error, ",e)
+

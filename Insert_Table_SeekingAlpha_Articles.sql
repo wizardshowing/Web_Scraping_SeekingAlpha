@@ -10,7 +10,7 @@ END
 
 SELECT *
 FROM dbo.SeekingAlpha_Articles
-WHERE Title = 'Why Would Apple Buy Displays From Samsung?'
+WHERE Title = 'Rising Competition Could Erode Adobe’s Creative Software Pricing and Share'
 ORDER BY ArticleID
 
 

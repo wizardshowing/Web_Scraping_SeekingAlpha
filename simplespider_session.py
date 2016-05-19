@@ -119,10 +119,10 @@ if __name__=="__main__":
 		print("###", a["linkAdr"])
 	"""
 	session = loginSA()[1]
-	res = collectFromTicker(session, 'AAPL','1')
+	res = collectFromTicker(session, 'ADBE','9')
 	print("###########################")
 	for a in res:
-		print("###", a["linkTxt"])
+		print("###", a["linkTxt"].replace(u"\u2018", "'").replace(u"\u2019", "'"))
 		print("###", a["linkAdr"])
 
 #collectFromUrl('http://seekingalpha.com/symbol/AAPL/focus/2')

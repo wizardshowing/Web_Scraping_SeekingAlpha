@@ -44,7 +44,7 @@ def collectArticle(session, url):
 	try:
 		title = soup.find_all("h1", {"itemprop":"headline"})[0].text
 	except:
-		print("Wrong url: ",url)
+		print("Could not get title: ",url)
 		return "wrongUrl"
 	###print("title: ", title)
 	dateTime = soup.find_all("time", {"itemprop":"datePublished"})[0]
@@ -148,7 +148,8 @@ if __name__ == "__main__":
     url3 = 'https://seekingalpha.com//article/3973979-ptcs-misunderstood-transformation-creates-rare-investment-opportunity'
     #url4 is an empty page
     url4 = 'http://seekingalpha.com/symbol/BIIB/focus/10'
-    collectArticle(session, url4)
+    test = 'http://seekingalpha.com/article/2263743-3m-post-it-as-a-great-business-or-is-it-scotch-taped-together'
+    collectArticle(session, test)
 
 
 
