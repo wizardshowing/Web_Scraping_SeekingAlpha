@@ -27,24 +27,26 @@ def collectFromOnePage(ticker, page):
 			print("isertDB error, ",e)
 	file.close()
 
-#collectFromOnePage('MMM',4)
 
-tickers = tickers.tickers
-session = loginSA()[1]
-
-for ticker in tickers:
-	for page in range(1, 11):
-		
-		res = collectFromTicker(session,ticker,str(page))
-		print(ticker, ' ',str(page))
-		file = open("NotCollected.txt","a")
-		for a in res:
-			#print(a["linkTxt"].replace(u"\u2018", "'").replace(u"\u2019", "'"))
-			try:
-				resDB = insertDB(session, a["linkAdr"])
-				if resDB != "success":
-					file.write(resDB+'\n')
-			except Exception as e:
-				print("isertDB error, ",e)
-		file.close()
-
+def collectFromSnP500(tickers):
+	
+	#session = loginSA()[1]
+	for ticker in tickers:
+		session = loginSA()[1]
+		for page in range(1, 11):
+			res = collectFromTicker(session,ticker,str(page))
+			print(ticker, ' ',str(page))
+			file = open("NotCollected.txt","a")
+			for a in res:
+				#print(a["linkTxt"].replace(u"\u2018", "'").replace(u"\u2019", "'"))
+				try:
+					resDB = insertDB(session, a["linkAdr"])
+					if resDB != "success":
+						file.write(resDB+'\n')
+				except Exception as e:
+					print("isertDB error, ",e)
+			file.close()
+if __name__ == "__main__":
+	#collectFromOnePage('AMT',3)
+	tickers = tickers.tickers
+	collectFromSnP500(tickers)

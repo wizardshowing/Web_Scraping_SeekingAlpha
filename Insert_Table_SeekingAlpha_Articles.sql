@@ -10,7 +10,7 @@ END
 
 SELECT *
 FROM dbo.SeekingAlpha_Articles
-WHERE Title = 'Rising Competition Could Erode Adobe’s Creative Software Pricing and Share'
+WHERE Title = '3M: Emerging Markets Is The Focus'
 ORDER BY ArticleID
 
 

@@ -38,18 +38,20 @@ def insertDB(session, url):
 	# we have 15 columns in this table
 	# Please only add '\' with a white space before them. Otherwiase there maybe a disater as database name and '\' could be concated together
 	try:
+		
 		cursor.execute(" \
 		BEGIN \
 		IF NOT EXISTS (SELECT * FROM dbo.SeekingAlpha_Articles \
 		WHERE Title = %s AND Name= %s) \
 		BEGIN \
 		INSERT dbo.SeekingALpha_Articles (Title, Date, Time, TickersAbout, TickersIncludes, \
-			Name, NameLink, Bio, Summary, ImageDummy, BodyContent, Disclosure, Position, CreatedAt, UpdatedAt) \
+			Name, NameLink, Bio, Summary, ImageDummy, BodyContent, Disclosure, Position, CreatedAt, UpdatedAt, BodyAll) \
 			VALUES (%s, %s, %s, %s, \
 			%s, %s, %s, %s, %s, \
-			%s, %s, %s, %s, %s, %s) \
+			%s, %s, %s, %s, %s, %s, %s) \
 		END \
-		END", (article['title'], article['name'], article['title'], article['date'], article['time'], article['tickersAbout'], article['tickersIncludes'], article['name'], article['nameLink'], article['bio'], article['summary'], article['imageDummy'], article['bodyContent'], article['disclosure'], None, now, now))
+		END", (article['title'], article['name'], article['title'], article['date'], article['time'], article['tickersAbout'], article['tickersIncludes'], article['name'], article['nameLink'], article['bio'], article['summary'], article['imageDummy'], article['bodyContent'], article['disclosure'], None, now, now, article['bodyAll']))
+		
 		conn.commit()
 		return "success"
 	except Exception as e:

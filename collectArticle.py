@@ -28,10 +28,14 @@ def collectArticle(session, url):
 	 
 	r = session.get(url, headers = userHeader)
 	
-
 	soup = BeautifulSoup(r.content, 'html.parser')
-	
 	sleep(2)
+
+	"""
+	file = open("out.txt","w")
+	file.write(soup.prettify())
+	file.close()
+	"""
 	"""
 	poolSession = ThreadPool(processes=1)
 	async_result_session_get = poolSession.apply_async(session.get, (url, userHeader))
@@ -90,11 +94,12 @@ def collectArticle(session, url):
 	summary = []
 	try:
 		summaryByParagraphes = soup.find_all("div", {"class":"a-sum", "itemprop":"description"})[0].find_all("p")
+		#print(summaryByParagraphes)
 		for p in summaryByParagraphes:
 		    summary.append(p.text);
 		###print("Summary: ",' '.join(summary))
 	except Exception as e:
-		print(e, ', No Summary')
+		print(', No Summary ', url)
 	summaryStr = ' '.join(summary)
 
 	image = soup.find_all("span", {"class":"image-overlay"})
@@ -103,20 +108,29 @@ def collectArticle(session, url):
 	else:
 	    imageDummy = 0
 	###print("ImageDummy: ",imageDummy)
-
-	body = soup.find_all("div", {"id":"a-body"})[0].find_all("p")
+	
+	bodyAll = soup.find_all("div", {"id":"a-body"})[0]
+	body = bodyAll.find_all("p")
 	bodyContent = ''
 	for p in body:
 	    bodyContent += (p.text+' ')
 	bodyContent = bodyContent.split("Disclosure")[0]
+	bodyAll = bodyAll.text
+	#print(bodyAll)
 	
 
 	try:
 		disclosure = soup.find_all("p", {"id":"a-disclosure"})[0].find_all("span")[0].text
 		###print("Disclosure: ", disclosure)
-	except Exception as e:
-		print(e, ', No Disclosure')
-		disclosure = ''
+	except:
+		try:
+			disclosure = bodyAll.split("Disclosure:")[1]
+		except:
+			print(', No Disclosure ', url )
+			disclosure = ''
+	#print(disclosure)
+	# New way of collecting disclosure.
+	
 	return {"title": title,
 			"date": date,
 			"time": time, 
@@ -128,7 +142,8 @@ def collectArticle(session, url):
 			"summary": summaryStr,
 			"bodyContent": bodyContent,
 			"imageDummy": imageDummy,
-			"disclosure": disclosure}
+			"disclosure": disclosure,
+			"bodyAll": bodyAll}
 
 if __name__ == "__main__":
     session = loginSA()[1]
@@ -138,7 +153,7 @@ if __name__ == "__main__":
     url3 = 'https://seekingalpha.com//article/3973979-ptcs-misunderstood-transformation-creates-rare-investment-opportunity'
     #url4 is an empty page
     url4 = 'http://seekingalpha.com/symbol/BIIB/focus/10'
-    test = 'http://seekingalpha.com/article/3970370-apple-give-us-real-numbers'
+    test = 'http://seekingalpha.com/article/1777542-3m-already-highly-valued-general-electric-and-siemens-might-be-better-deals'
     collectArticle(session, test)
 
 
