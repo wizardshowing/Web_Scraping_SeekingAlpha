@@ -37,20 +37,29 @@ def insertDB(session, url):
 	# Insert into database if not exists
 	# we have 15 columns in this table
 	# Please only add '\' with a white space before them. Otherwiase there maybe a disater as database name and '\' could be concated together
+	#print(article['articleUrl2'])
 	try:
-		
+		"""
+		cursor.execute("\
+		INSERT dbo.SeekingALpha_Articles (Title, Date, Time, TickersAbout, TickersIncludes, \
+			Name, NameLink, Bio, Summary, ImageDummy, BodyContent, Disclosure, Position, CreatedAt, UpdatedAt, BodyAll, ArticleNumber, ArticleUrl) \
+			VALUES (%s, %s, %s, %s, \
+			%s, %s, %s, %s, %s, \
+			%s, %s, %s, %s, %s, %s, %s, %s, %s) \
+		", (article['title'], article['date'], article['time'], article['tickersAbout'], article['tickersIncludes'], article['name'], article['nameLink'], article['bio'], article['summary'], article['imageDummy'], article['bodyContent'], article['disclosure'], None, now, now, article['bodyAll'], article['articleNumber'], article['articleUrl2']))
+		"""
 		cursor.execute(" \
 		BEGIN \
 		IF NOT EXISTS (SELECT * FROM dbo.SeekingAlpha_Articles \
-		WHERE Title = %s AND Name= %s) \
+		WHERE ArticleNumber = %s) \
 		BEGIN \
 		INSERT dbo.SeekingALpha_Articles (Title, Date, Time, TickersAbout, TickersIncludes, \
-			Name, NameLink, Bio, Summary, ImageDummy, BodyContent, Disclosure, Position, CreatedAt, UpdatedAt, BodyAll) \
+			Name, NameLink, Bio, Summary, ImageDummy, BodyContent, Disclosure, Position, CreatedAt, UpdatedAt, BodyAll, ArticleNumber, ArticleUrl) \
 			VALUES (%s, %s, %s, %s, \
 			%s, %s, %s, %s, %s, \
-			%s, %s, %s, %s, %s, %s, %s) \
+			%s, %s, %s, %s, %s, %s, %s, %s, %s) \
 		END \
-		END", (article['title'], article['name'], article['title'], article['date'], article['time'], article['tickersAbout'], article['tickersIncludes'], article['name'], article['nameLink'], article['bio'], article['summary'], article['imageDummy'], article['bodyContent'], article['disclosure'], None, now, now, article['bodyAll']))
+		END", (article['articleNumber'], article['title'], article['date'], article['time'], article['tickersAbout'], article['tickersIncludes'], article['name'], article['nameLink'], article['bio'], article['summary'], article['imageDummy'], article['bodyContent'], article['disclosure'], None, now, now, article['bodyAll'], article['articleNumber'], article['articleUrl2']))
 		
 		conn.commit()
 		return "success"
@@ -58,15 +67,7 @@ def insertDB(session, url):
 		print(e," insertDB failed.")
 		return "fail"
 
-	"""
-	# Insert into database anyway.
-	cursor.execute("INSERT dbo.SeekingALpha_Articles (Title, Date, Time, TickersAbout, TickersIncludes, \
-		Name, NameLink, Bio, Summary, ImageDummy, BodyContent, Disclosure, Position, CreatedAt, UpdatedAt) OUTPUT INSERTED.ArticleID \
-		VALUES (%s, %s, %s, %s, \
-		%s, %s, %s, %s, %s, \
-		%s, %s, %s, %s, %s, %s)", (article['title'], article['date'], article['time'], article['tickersAbout'], article['tickersIncludes'], article['name'], article['nameLink'], article['bio'], article['summary'], article['imageDummy'], article['bodyContent'], article['disclosure'], None, now, now))
-	conn.commit()
-	"""
+
 
 	# If you don't commit, then the inserted results will not be visual to others than local users.
 

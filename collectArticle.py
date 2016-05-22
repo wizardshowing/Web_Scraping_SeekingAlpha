@@ -130,7 +130,11 @@ def collectArticle(session, url):
 			disclosure = ''
 	#print(disclosure)
 	# New way of collecting disclosure.
-	
+	try:
+		articleNumber = int(url.split('article/')[1].split("-")[0])
+	except:
+		print("No article number.")
+	#print(articleNumber)
 	return {"title": title,
 			"date": date,
 			"time": time, 
@@ -143,7 +147,9 @@ def collectArticle(session, url):
 			"bodyContent": bodyContent,
 			"imageDummy": imageDummy,
 			"disclosure": disclosure,
-			"bodyAll": bodyAll}
+			"bodyAll": bodyAll,
+			"articleNumber": articleNumber,
+			'articleUrl2': url}
 
 if __name__ == "__main__":
     session = loginSA()[1]

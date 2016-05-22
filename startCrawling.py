@@ -47,6 +47,6 @@ def collectFromSnP500(tickers):
 					print("isertDB error, ",e)
 			file.close()
 if __name__ == "__main__":
-	#collectFromOnePage('AMT',3)
-	tickers = tickers.tickers
-	collectFromSnP500(tickers)
+	collectFromOnePage('AAPl',3)
+	#tickers = tickers.tickers
+	#collectFromSnP500(tickers)
