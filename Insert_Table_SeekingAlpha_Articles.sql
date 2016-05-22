@@ -10,7 +10,26 @@ END
 
 SELECT *
 FROM dbo.SeekingAlpha_Articles
-WHERE Title = '3M: Emerging Markets Is The Focus'
 ORDER BY ArticleID
+
+
+INSERT INTO dbo.SeekingAlpha_Articles
+  (Title, Date, Time, TickersAbout, TickersIncludes, Name, NameLink, Bio, Summary, ImageDummy, BodyContent, Disclosure, Position, CreatedAt, UpdatedAt, BodyAll, ArticleNumber, ArticleUrl)
+VALUES
+  ('test', '2000-01-01','11:11:11','test', 'test', 'test', 'test', 'test', 'test', 1, 'test', 'test', 'test', null, null, 'test', 1636192, 'test')
+ON DUPLICATE KEY UPDATE
+  BodyAll     = VALUES(BodyAll),
+  ArticleUrl = VALUES(ArticleUrl)
+
+
+
+
+
+
+
+
+
+
+
 
 
