@@ -5,3 +5,6 @@ out.txt
 test.py
 __pycache__
 ErrorShot
+Alter_Table_SeekingAlpha_Articles.sql
+Insert_Table_SeekingAlpha_Articles.sql
+Create_Table_SeekingAlpha_Articles_Original.sql
