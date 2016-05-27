@@ -10,6 +10,7 @@ from simplespider_session import collectFromTicker
 from collectArticle import collectArticle
 from insertDB import insertDB
 import tickers
+import tickers_all_NASDAQ
 
 def collectFromOnePage(ticker, page):
 	
@@ -48,5 +49,7 @@ def collectFromSnP500(tickers):
 			file.close()
 if __name__ == "__main__":
 	#collectFromOnePage('AAPl',3)
-	tickers = tickers.tickers
+	# When we finish the snp500 tickers, we move on to all NASDAQ tickers
+	#tickers = tickers.tickers
+	tickers = tickers_all_NASDAQ.tickers_1
 	collectFromSnP500(tickers)
