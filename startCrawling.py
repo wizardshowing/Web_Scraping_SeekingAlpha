@@ -51,5 +51,6 @@ if __name__ == "__main__":
 	#collectFromOnePage('AAPl',3)
 	# When we finish the snp500 tickers, we move on to all NASDAQ tickers
 	#tickers = tickers.tickers
-	tickers = tickers_all_NASDAQ.tickers_1
+	# Finish from tickers_1, tickers_2, tickers_3
+	tickers = tickers_all_NASDAQ.tickers_3
 	collectFromSnP500(tickers)
