@@ -41,6 +41,7 @@ def collectFromSnP500(tickers):
 			for a in res:
 				#print(a["linkTxt"].replace(u"\u2018", "'").replace(u"\u2019", "'"))
 				try:
+					#print(a["linkAdr"])
 					resDB = insertDB(session, a["linkAdr"])
 					if resDB != "success":
 						file.write(resDB+'\n')
@@ -52,5 +53,5 @@ if __name__ == "__main__":
 	# When we finish the snp500 tickers, we move on to all NASDAQ tickers
 	#tickers = tickers.tickers
 	# Finish from tickers_1, tickers_2, tickers_3
-	tickers = tickers_all_NASDAQ.tickers_3
+	tickers = tickers.tickers
 	collectFromSnP500(tickers)

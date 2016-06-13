@@ -4,6 +4,7 @@ Date:17/05/2016
 Download one artile using url.
 Naming rules: http://stackoverflow.com/questions/2029358/should-i-write-table-and-column-names-always-lower-case
 Table design: Title, Date, Time, TickersAbout, TickersIncludes, Name, NameLink, Bio, Summary, ImageDummy, BodyContent, Disclosure, Position 
+Time is under UTC
 """
 
 import requests
@@ -30,7 +31,7 @@ def collectArticle(session, url):
 	
 	soup = BeautifulSoup(r.content, 'html.parser')
 	sleep(2)
-
+	###print(soup)
 	"""
 	file = open("out.txt","w")
 	file.write(soup.prettify())
@@ -53,11 +54,17 @@ def collectArticle(session, url):
 		print("Could not get title: ",url)
 		return "Could not get title: "+url
 	###print("title: ", title)
-	dateTime = soup.find_all("time", {"itemprop":"datePublished"})[0]
-	time1 = dateTime.get("content")
-	time2 = dateTime.text
-	date = dateTime.get("content").split('T')[0]
-	time = dateTime.get("content").split('T')[1].split('Z')[0]
+	dateTime = ''
+	date = ''
+	time = ''
+	try:
+		dateTime = soup.find_all("meta", {"property":"article:published_time"})[0]
+		#time1 = dateTime.get("content")
+		#time2 = dateTime.text
+		date = dateTime.get("content").split('T')[0]
+		time = dateTime.get("content").split('T')[1].split('Z')[0]
+	except Exception as e:
+		print("Could not get time: ", e)
 	###print("Date time is: {0} and {1}".format(date, time))
 	# This part, we could not collect the num of comments. we don't have this field when we download the webpage.
 	# instead, we have a field with id="a-comments-wrapper"
@@ -159,7 +166,7 @@ if __name__ == "__main__":
     url3 = 'https://seekingalpha.com//article/3973979-ptcs-misunderstood-transformation-creates-rare-investment-opportunity'
     #url4 is an empty page
     url4 = 'http://seekingalpha.com/symbol/BIIB/focus/10'
-    test = 'http://seekingalpha.com/article/1777542-3m-already-highly-valued-general-electric-and-siemens-might-be-better-deals'
+    test = 'http://seekingalpha.com/article/3981108-apple-focused-long-term-success-survival'
     collectArticle(session, test)
 
 

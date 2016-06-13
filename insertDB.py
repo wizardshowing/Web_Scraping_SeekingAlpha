@@ -75,5 +75,5 @@ if __name__ == "__main__":
 	session = loginSA()[1]
 	url = 'http://seekingalpha.com/article/3972364-adobe-targets-sketch-axure-justinmind'
 	url2 = 'https://seekingalpha.com/pro/checkout/3973979?notice=pro'
-	url3 = 'https://seekingalpha.com//article/3973979-ptcs-misunderstood-transformation-creates-rare-investment-opportunity'
-	print(insertDB(session, url))
+	url3 = 'http://seekingalpha.com/article/3981280-5-things-apple-must-wwdc-keep-stock-tanking'
+	print(insertDB(session, url3))
